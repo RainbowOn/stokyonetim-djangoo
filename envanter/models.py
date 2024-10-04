@@ -3,6 +3,7 @@
 from django.db import models
 import random
 
+
 class MusteriKayit(models.Model):
     isim = models.CharField(max_length=100, null=True, blank=True)
     soyisim = models.CharField(max_length=100, null=True, blank=True)
@@ -24,7 +25,7 @@ class MusteriKayit(models.Model):
     adet = models.PositiveIntegerField()
     depo_bilgisi = models.CharField(max_length=100)
     not_field = models.TextField(null=True, blank=True)
-    raf_numarasi = models.PositiveIntegerField(unique=True, blank=True, null=True)  # Güncellendi
+    raf_numarasi = models.PositiveIntegerField(unique=True, blank=True, null=True)  # Sadece sayısal değer alacak
     durum = models.CharField(max_length=50, default="Aktif")
     
     ikinci_urun_adi = models.CharField(max_length=100, null=True, blank=True)
@@ -36,9 +37,10 @@ class MusteriKayit(models.Model):
         if not self.raf_numarasi:
             self.raf_numarasi = self.generate_unique_raf_numarasi()
         super().save(*args, **kwargs)
-    
+
     def generate_unique_raf_numarasi(self):
         while True:
-            raf_numarasi = random.randint(1, 9999)  # Tek bir sayı üretiyoruz
+            # Benzersiz sayısal bir değer oluşturur
+            raf_numarasi = random.randint(1, 999999)
             if not MusteriKayit.objects.filter(raf_numarasi=raf_numarasi).exists():
                 return raf_numarasi

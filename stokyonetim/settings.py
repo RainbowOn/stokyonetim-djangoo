@@ -54,7 +54,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5174",  # React uygulamanın adresi
+    "http://localhost:5173",  # React uygulamanın adresi
 ]
 
 ROOT_URLCONF = 'stokyonetim.urls'
