@@ -7,4 +7,5 @@ router.register(r'kayitlar', MusteriKayitViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('accounts/', include('allauth.urls')),
 ]

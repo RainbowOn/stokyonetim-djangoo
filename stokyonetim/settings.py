@@ -39,10 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',  # REST framework ekliyoruz
     'envanter',
-    'corsheaders',         # Envanter uygulamamızı ekliyoruz
+    'corsheaders', 
+    'phonenumber_field',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',                # Envanter uygulamamızı ekliyoruz
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # CORS middleware ekliyoruz
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # allauth middleware ekliyoruz
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -76,6 +81,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'stokyonetim.wsgi.application'
+
+
+AUTHENTICATION_BACKENDS = [
+    # ...
+    'allauth.account.auth_backends.AuthenticationBackend',
+    # ...
+]
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # İsteğe bağlı
 
 
 # Database
@@ -111,9 +130,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'tr-tr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Istanbul'
 
 USE_I18N = True
 
@@ -142,3 +161,7 @@ REST_FRAMEWORK = {
 
 # CSRF korumasını devre dışı bırakmak için:
 CORS_ALLOW_CREDENTIALS = True
+
+PHONENUMBER_DEFAULT_REGION = "TR"  # Türkiye telefon numarası formatı kullan
+
+AUTH_USER_MODEL = 'envanter.CustomUser'  # Custom kullanıcı modelini kullan
