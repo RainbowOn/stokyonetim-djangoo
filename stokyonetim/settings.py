@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',                # Envanter uygulamamızı ekliyoruz
+    'allauth.socialaccount',
+    'rest_framework.authtoken',            
 ]
 
 MIDDLEWARE = [
@@ -59,10 +60,20 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React uygulamanın adresi
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 ROOT_URLCONF = 'stokyonetim.urls'
+
+WSGI_APPLICATION = 'stokyonetim.wsgi.application'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Django'nun varsayılan auth backend'i
+    'allauth.account.auth_backends.AuthenticationBackend',  # allauth backend'i
+]
 
 TEMPLATES = [
     {
@@ -72,7 +83,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # allauth için gerekli
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -80,21 +91,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'stokyonetim.wsgi.application'
-
-
-AUTHENTICATION_BACKENDS = [
-    # ...
-    'allauth.account.auth_backends.AuthenticationBackend',
-    # ...
-]
 
 SITE_ID = 1
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # İsteğe bağlı
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # İsteğe bağlı
 
 
 # Database
@@ -102,8 +105,15 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # İsteğe bağlı
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sakila',  # Kendi veritabanınızın adını buraya yazın
+        'USER': 'root', 
+        'PASSWORD': 'ypKDxTGz1711P@',  # Kendi şifrenizi buraya yazın
+        'HOST': 'localhost',  
+        'PORT': '3306',  
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'" 
+        }
     }
 }
 
@@ -149,19 +159,24 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# REST Framework Ayarları
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
 }
 
-# CSRF korumasını devre dışı bırakmak için:
-CORS_ALLOW_CREDENTIALS = True
+# CORS Ayarları
+
+
 
 PHONENUMBER_DEFAULT_REGION = "TR"  # Türkiye telefon numarası formatı kullan
 
 AUTH_USER_MODEL = 'envanter.CustomUser'  # Custom kullanıcı modelini kullan
+
+
+

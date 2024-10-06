@@ -21,8 +21,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('envanter.urls')),
-    path('accounts/', include('allauth.urls')),
+    path('api/', include('envanter.urls')),  # envanter.urls dosyasını include et
+    path('accounts/', include('allauth.urls')),  # allauth URLs
+    # path('api-token-auth/', obtain_auth_token, name='api_token_auth'),  # Bu satırı kaldırın
 ]
+
+
 
 
